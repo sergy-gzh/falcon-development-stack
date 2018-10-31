@@ -20,12 +20,12 @@ The current setup is only tested on Linux.
 ## Installation 
 1) Clone this git repository to your local system.
 ```bash
-$ git clone git@bitbucket.org:deity-core/development-stack.git
+$ git clone git@github.com:deity-io/falcon-development-stack.git
 ```
 
 2) Change the current working directory to the root folder.
 ```bash
-$ cd ./development-stack
+$ cd ./falcon-development-stack
 ```
 
 3) Copy your composer `auth.json` file to project dir 
