@@ -1,0 +1,105 @@
+version: '3.2'
+services:
+  deity_wordpress_mysql:
+    image: mariadb:10.2
+    volumes:
+      - type: volume
+        source: wordpress_db_data
+        target: /var/lib/mysql
+        volume:
+          nocopy: true
+    env_file:
+      - ./docker/wordpress/env
+    ports:
+       - "3354:3306"
+  deity_magento2_mysql:
+    image: mariadb:10.2
+    volumes:
+      - type: volume
+        source: magento_db_data
+        target: /var/lib/mysql
+        volume:
+          nocopy: true    
+    env_file:
+      - ./docker/magento2/env
+    ports:
+      - "3352:3306"
+  deity_mongo:
+    build: docker/deity-mongo
+    ports:
+      - "3353:27017"
+  deity_project:
+    build: docker/deity-project
+    ports:
+      - "3000:3000" #client
+      - "3001:3001" # client in debug mode. for HMR
+      - "4000:4000" #server
+      - "2222:22" #ssh
+    volumes:
+      - type: bind
+        source: ./src/deity-project
+        target: /usr/src/  
+    depends_on:
+      - deity_mongo
+      - deity_magento2
+      - deity_wordpress
+      - deity_redis
+    links: #added allias because underscore not allowed in url
+     - deity_mongo:mongo
+     - deity_magento2:magento2
+     - deity_wordpress:wordpress
+    tty: true
+    working_dir: /usr/src/my-app/client
+    entrypoint: yarn start
+  deity_magento2:
+    build: docker/magento2
+    tty: true
+    ports:
+      - "8062:80"
+    depends_on:
+      - deity_magento2_mysql
+    env_file:
+      - ./docker/magento2/env
+    environment:
+      - SSH_AUTH_SOCK=/tmp/agent.sock
+    volumes:      
+      - type: bind
+        source: ./src/magento2
+        target: /var/www/html/
+      - $SSH_AUTH_SOCK:/tmp/agent.sock
+    links:
+      - deity_redis:deity_redis
+    #entrypoint:  entrypoint.sh
+  deity_redis:
+    image: redis:3.2-alpine
+    command: "--maxmemory 64m"
+    ports:
+      - "6379:6379"
+  deity_wordpress:
+    build: docker/wordpress
+    ports:
+        - "8063:80"
+    depends_on:
+      - deity_wordpress_mysql
+    env_file:
+      - ./docker/wordpress/env
+    environment:
+      - SSH_AUTH_SOCK=/tmp/agent.sock
+    volumes:
+      - $SSH_AUTH_SOCK:/tmp/agent.sock
+      - type: bind
+        source: ./src/deity-wordpress-api
+        target: /var/www/html/wp-content/plugins/deity-wordpress-api
+      - type: bind
+        source: ./src/deity-products-wordpress
+        target: /var/www/html/wp-content/plugins/deity-products-wordpress
+    #entrypoint: entrypoint.sh 
+  deity_mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025" # mail port
+      - "8025:8025" # web interface
+    restart: always
+volumes:
+  wordpress_db_data:
+  magento_db_data:

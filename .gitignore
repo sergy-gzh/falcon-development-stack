@@ -1,0 +1,4 @@
+.idea
+/src/*
+**/id_rsa
+docker/magento2/composer/auth.json
