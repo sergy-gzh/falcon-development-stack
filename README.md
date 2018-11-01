@@ -197,7 +197,7 @@ $ docker volume rm  [stack_name]_wordpress_db_data
 * Wordpress use redish for session server
 * Mac and Windows users will have a bad time with mounted volumes
 * Mac's currently dont suppoort mounting the authentication agent socket. (update is planed)
-* Windows will probably never suppoort mounting the authentication agent socket
+* Windows will probably never support mounting the authentication agent socket
 * add status/info pages for redish
 * add nginx (single entry point) to proxy all date to correct servers 
 * check out HAproxy over nginx
