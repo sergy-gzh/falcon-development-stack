@@ -42,7 +42,7 @@ RUN chown -R nodedebug:nodedebug /home/nodedebug/.ssh
 
 EXPOSE 22
 #try not to start 
-RUN chmod -x /etc/init.d/sshd
+# RUN chmod -x /etc/init.d/sshd
 # CMD ["/usr/sbin/sshd","-D"]
 # End of SSHServer config 
 
