@@ -2,9 +2,7 @@
 
 set -e
 sudo chown www-data:www-data -R /var/www/html
-sudo chown www-data:www-data /tmp/agent.sock
 
-git clone git@github.com:deity-io/falcon-magento2-development.git /var/www/html
 composer install
 
 sudo find /var/www/html/ -type d -exec chmod 777 {} \; ## check this other-user rights, i'm setting this for the developer on the mounts

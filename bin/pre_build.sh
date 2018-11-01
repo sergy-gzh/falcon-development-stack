@@ -29,6 +29,8 @@ do
     mkdir -p "$DEITY_STACK_ROOT/src/$DIRECTORY"
 done
 
+git clone git@github.com:deity-io/falcon-magento2-development.git "${DEITY_STACK_ROOT}/src/magento2/"
+git clone git@github.com:deity-io/falcon-wordpress-module.git "${DEITY_STACK_ROOT}/src/deity-wordpress-api/"
 
 # if the project folder doen't exists, run a generator in a deity container, we will map the volumes in the running stack 
 if [ ! -d "deity-project" ]; then
@@ -38,6 +40,8 @@ if [ ! -d "deity-project" ]; then
 fi
 
 chmod 600 docker/deity-project/nodedebug/id_rsa_nodedebug
+
+
 
 ## Copy ssh public and private key
 ## Check if SSH key files are already copied
