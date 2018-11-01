@@ -25,6 +25,8 @@ RUN echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 
 #use previous generated keys, so the host system wont think the ssh server changed on every rebuild
 COPY ./sshServer/* /etc/ssh/
+RUN chmod 600   /etc/ssh/*
+
 
 RUN adduser -D  nodedebug
 # Ok this is the HACK. if i make a user without password it doesn't work.
@@ -34,8 +36,8 @@ RUN passwd -d nodedebug
 RUN mkdir /home/nodedebug/.ssh/
 COPY ./nodedebug/id_rsa_nodedebug.pub /home/nodedebug/.ssh/authorized_keys
 #RUN cat /home/nodedebug/id_rsa.pub >> /home/nodedebug/.ssh/authorized_keys
+RUN chmod 600 -R  /home/nodedebug/.ssh/
 RUN chmod 700 /home/nodedebug/.ssh
-RUN chmod 600  /home/nodedebug/.ssh/authorized_keys
 RUN chown -R nodedebug:nodedebug /home/nodedebug/.ssh
 
 EXPOSE 22

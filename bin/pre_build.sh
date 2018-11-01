@@ -37,6 +37,8 @@ if [ ! -d "deity-project" ]; then
     docker run -t --rm -v "${DEITY_STACK_ROOT}/src/deity-project":/usr/src falcon:latest /bin/sh -c "cd /usr/src && yarn create falcon-app my-app"
 fi
 
+chmod 600 docker/deity-project/nodedebug/id_rsa_nodedebug
+
 ## Copy ssh public and private key
 ## Check if SSH key files are already copied
 #if [ -e "docker/magento2/.ssh/id_rsa" ]; then
