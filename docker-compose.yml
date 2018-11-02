@@ -60,13 +60,10 @@ services:
       - deity_magento2_mysql
     env_file:
       - ./docker/magento2/env
-    environment:
-      - SSH_AUTH_SOCK=/tmp/agent.sock
     volumes:      
       - type: bind
         source: ./src/magento2
         target: /var/www/html/
-      - $SSH_AUTH_SOCK:/tmp/agent.sock
     links:
       - deity_redis:deity_redis
     #entrypoint:  entrypoint.sh
@@ -83,10 +80,7 @@ services:
       - deity_wordpress_mysql
     env_file:
       - ./docker/wordpress/env
-    environment:
-      - SSH_AUTH_SOCK=/tmp/agent.sock
     volumes:
-      - $SSH_AUTH_SOCK:/tmp/agent.sock
       - type: bind
         source: ./src/deity-wordpress-api
         target: /var/www/html/wp-content/plugins/deity-wordpress-api
