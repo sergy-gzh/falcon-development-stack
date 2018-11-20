@@ -64,6 +64,9 @@ services:
       - type: bind
         source: ./src/magento2
         target: /var/www/html/
+      - type: bind
+        source: ./src/deity-magento-api
+        target: /var/www/packages/api
     links:
       - deity_redis:deity_redis
     #entrypoint:  entrypoint.sh
@@ -82,7 +85,7 @@ services:
       - ./docker/wordpress/env
     volumes:
       - type: bind
-        source: ./src/deity-wordpress-api
+        source: ./src/deity-wordpress-api/
         target: /var/www/html/wp-content/plugins/deity-wordpress-api
       - type: bind
         source: ./src/deity-products-wordpress
