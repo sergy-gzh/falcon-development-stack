@@ -3,11 +3,13 @@
 set -a
 set -e
 
+source ./docker/magento2/env
+
 # then run all the commands needed to be doen befoure the docker build
 . "bin/pre_build.sh"
 
 # Do the docker build
-source ./docker/magento2/env
+
 docker-compose build
 
 # Now run all the commands that would change data on the mounted volues 
