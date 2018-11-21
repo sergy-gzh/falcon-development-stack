@@ -29,8 +29,15 @@ do
     mkdir -p "$DEITY_STACK_ROOT/src/$DIRECTORY"
 done
 
-git clone git@github.com:deity-io/falcon-magento2-development.git "${DEITY_STACK_ROOT}/src/magento2/"
+#git clone git@github.com:deity-io/falcon-magento2-development.git "${DEITY_STACK_ROOT}/src/magento2/"
 git clone git@github.com:deity-io/falcon-wordpress-module.git "${DEITY_STACK_ROOT}/src/deity-wordpress-api/"
+
+
+if [ "$MAGENTO_DEV" == "Y" ]; then
+    git clone git@github.com:deity-io/falcon-magento2-development.git "${DEITY_STACK_ROOT}/src/magento2/"
+else
+    git clone git@github.com:deity-io/falcon-magento2-module.git "${DEITY_STACK_ROOT}/src/deity-magento-api/"
+fi
 
 # if the project folder doen't exists, run a generator in a deity container, we will map the volumes in the running stack 
 if [ ! -d "deity-project" ]; then

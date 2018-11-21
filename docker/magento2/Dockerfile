@@ -5,17 +5,12 @@ ENV COMPOSER_HOME /var/www/.composer/
 
 COPY ./composer/auth.json $COMPOSER_HOME
 RUN curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer
-
-#COPY ./.ssh/id_rsa /var/www/.ssh/id_rsa
-
-RUN mkdir /var/www/.ssh
-
-RUN touch /var/www/.ssh/config
-
-RUN echo "StrictHostKeyChecking no " >> /var/www/.ssh/config 
-RUN echo "StrictHostKeyChecking no " >> /root/.ssh/config
-RUN chown www-data:www-data $COMPOSER_HOME/auth.json
+    && mv composer.phar /usr/local/bin/composer \
+    && mkdir /var/www/.ssh \
+    && touch /var/www/.ssh/config \
+    && echo "StrictHostKeyChecking no " >> /var/www/.ssh/config \
+    && echo "StrictHostKeyChecking no " >> /root/.ssh/config \
+    && chown www-data:www-data $COMPOSER_HOME/auth.json
    
 #   && chown www-data:www-data /var/www/.ssh/* \
 #   && chmod 400 /var/www/.ssh/id_rsa \
@@ -47,32 +42,25 @@ RUN requirements="libpng12-dev libmcrypt-dev libmcrypt4 libcurl3-dev libfreetype
 # Symlink xdebug.so so that it is at a known path
 RUN pecl install xdebug \
     && PHP_EXT_PATH=$(php -r 'echo ini_get("extension_dir");') \
-    && ln -s "${PHP_EXT_PATH}/xdebug.so" /opt/xdebug.so
+    && ln -s "${PHP_EXT_PATH}/xdebug.so" /opt/xdebug.so \
+    && chsh -s /bin/bash www-data \
+    && chown -R www-data:www-data /var/www
 
 COPY ./config/xdebug.ini /usr/local/etc/php/conf.d/
-
-RUN chsh -s /bin/bash www-data
-
-RUN chown -R www-data:www-data /var/www
-
 COPY ./install-magento /usr/local/bin/install-magento
-RUN chmod +x /usr/local/bin/install-magento
-
 COPY ./post-build.sh /usr/local/bin/post-build.sh
-RUN chmod +x /usr/local/bin/post-build.sh
 
-RUN a2enmod rewrite
-RUN echo "memory_limit=2048M" > /usr/local/etc/php/conf.d/memory-limit.ini
-
-RUN echo "www-data ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
-RUN echo "hostname=localhost.localdomain" >> /etc/ssmtp/ssmtp.conf
-RUN echo "root=root@deity.io" >> /etc/ssmtp/ssmtp.conf
-RUN echo "mailhub=deity_mailhog:1025" >> /etc/ssmtp/ssmtp.conf
-RUN echo "sendmail_path=/usr/sbin/ssmtp -t" >> /usr/local/etc/php/conf.d/php-sendmail.ini
-RUN echo "localhost localhost.localdomain" >> /etc/hosts
-
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN chmod +x /usr/local/bin/post-build.sh \
+&& chmod +x /usr/local/bin/install-magento \
+&&  a2enmod rewrite \
+&&  echo "memory_limit=2048M" > /usr/local/etc/php/conf.d/memory-limit.ini \
+&&  echo "www-data ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+&&  echo "hostname=localhost.localdomain" >> /etc/ssmtp/ssmtp.conf \
+&&  echo "root=root@deity.io" >> /etc/ssmtp/ssmtp.conf \
+&&  echo "mailhub=deity_mailhog:1025" >> /etc/ssmtp/ssmtp.conf \
+&&  echo "sendmail_path=/usr/sbin/ssmtp -t" >> /usr/local/etc/php/conf.d/php-sendmail.ini \
+&&  echo "localhost localhost.localdomain" >> /etc/hosts \
+&&  apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR $INSTALL_DIR
 
