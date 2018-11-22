@@ -24,10 +24,6 @@ services:
       - ./docker/magento2/env
     ports:
       - "3352:3306"
-  deity_mongo:
-    build: docker/deity-mongo
-    ports:
-      - "3353:27017"
   deity_project:
     build: docker/deity-project
     ports:
@@ -40,12 +36,10 @@ services:
         source: ./src/deity-project
         target: /usr/src/  
     depends_on:
-      - deity_mongo
       - deity_magento2
       - deity_wordpress
       - deity_redis
     links: #added allias because underscore not allowed in url
-     - deity_mongo:mongo
      - deity_magento2:magento2
      - deity_wordpress:wordpress
     tty: true
