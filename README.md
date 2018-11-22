@@ -190,18 +190,15 @@ $ docker volume rm  [stack_name]_wordpress_db_data
 * server configuration default.json is a full copy. overwriting specific values isn't supported yet
 * debugging Node.js server not working on falcon- client (ticket created)
 * node.js server debugging, cant set port trugh settings. Wont be a problem when running on seperate containers
-* Mongo and Redis are un-used 
-* Magento 2 default install to "current" and switch to "development"
-* Magento 2 use redis for Page and defautl cache
 * Magento 2 use redis for session server
-* Wordpress use redish for session server
+* Wordpress use redis for session server
 * Mac and Windows users will have a bad time with mounted volumes
 * Mac's currently dont suppoort mounting the authentication agent socket. (update is planed)
 * Windows will probably never support mounting the authentication agent socket
-* add status/info pages for redish
+* add status/info pages for redis
 * add nginx (single entry point) to proxy all date to correct servers 
 * check out HAproxy over nginx
-* provide environment file for externbal port mappings
+* provide environment file for external port mappings
 * provide option to switch between main/nightly builds / magento developement environment
 * Add Mailhog as default Server for Sendmail (All mails not send from Wordpress or Magento)
 
