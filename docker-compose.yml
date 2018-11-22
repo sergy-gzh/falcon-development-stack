@@ -75,6 +75,7 @@ services:
     command: "--maxmemory 64m"
     ports:
       - "6379:6379"
+    entrypoint: "redis-server"
   deity_wordpress:
     build: docker/wordpress
     ports:

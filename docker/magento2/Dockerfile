@@ -46,6 +46,7 @@ RUN pecl install xdebug \
     && chsh -s /bin/bash www-data \
     && chown -R www-data:www-data /var/www
 
+COPY ./config/redis_config.txt /var/www/redis_config.txt
 COPY ./config/xdebug.ini /usr/local/etc/php/conf.d/
 COPY ./install-magento /usr/local/bin/install-magento
 COPY ./post-build.sh /usr/local/bin/post-build.sh

@@ -43,4 +43,8 @@ fi
 /var/www/html/bin/magento sampledata:deploy 
 /var/www/html/bin/magento setup:upgrade
 
+sudo mv /var/www/html/app/etc/env.php /var/www/html/app/etc/env.bck
+sudo sed 's/];/,/' /var/www/html/app/etc/env.bck  > /var/www/html/app/etc/env.php 
+sudo cat /var/www/redis_config.txt >>  /var/www/html/app/etc/env.php 
+
 sudo chown www-data:www-data -R /var/www/html
