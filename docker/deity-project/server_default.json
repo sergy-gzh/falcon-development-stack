@@ -65,12 +65,7 @@
       "config": {
         "api": "api-magento2"
       }
-    },
-    {
-      "package": "@deity/falcon-dynamic-route-extension",
-      "config": {
-        "allowedExtensions": [".html"]
-      }
+    }
     }
   ],
   "session": {

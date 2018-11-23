@@ -29,4 +29,4 @@ color_magenta
 echo "Updating deity server config"
 color_reset 
 docker-compose up -d deity_project
-docker-compose exec deity_project /bin/sh -c "mv /usr/server_default.json /usr/src/my-app/server/config/default.json"
+docker-compose exec deity_project /bin/sh -c "mv /usr/server_default.json /usr/src/my-app/server/config/development.json"
