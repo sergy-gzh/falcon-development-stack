@@ -24,27 +24,38 @@ services:
       - ./docker/magento2/env
     ports:
       - "3352:3306"
-  deity_project:
-    build: docker/deity-project
+  deity_client:
+    build: docker/deity-client
     ports:
       - "3000:3000" #client
       - "3001:3001" # client in debug mode. for HMR
+    volumes:
+      - type: bind
+        source: ./src/deity-project/
+        target: /usr/src/  
+    depends_on:
+      - deity_server
+    links:
+     - deity_server:deityserver
+    tty: true
+    working_dir: /usr/src/my-app/client
+  deity_server:
+    build: docker/deity-server
+    ports:
       - "4000:4000" #server
       - "2222:22" #ssh
     volumes:
       - type: bind
-        source: ./src/deity-project
+        source: ./src/deity-project/
         target: /usr/src/  
     depends_on:
       - deity_magento2
       - deity_wordpress
-      - deity_redis
     links: #added allias because underscore not allowed in url
      - deity_magento2:magento2
      - deity_wordpress:wordpress
     tty: true
-    working_dir: /usr/src/my-app/client
-    entrypoint: yarn start
+    working_dir: /usr/src/my-app/server
   deity_magento2:
     build: docker/magento2
     tty: true

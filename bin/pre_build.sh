@@ -44,6 +44,10 @@ if [ ! -d "deity-project" ]; then
     docker build -t falcon "${DEITY_STACK_ROOT}/docker/deity-project/"
     # rm -rf /home/bram/projects/falcon/src
     docker run -t --rm -v "${DEITY_STACK_ROOT}/src/deity-project":/usr/src falcon:latest /bin/sh -c "cd /usr/src && yarn create falcon-app my-app"
+    
+    color_green
+    echo "Done building app"
+    color_reset
 fi
 
 chmod 600 docker/deity-project/nodedebug/id_rsa_nodedebug

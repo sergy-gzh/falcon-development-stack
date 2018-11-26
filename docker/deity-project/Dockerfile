@@ -1,9 +1,6 @@
 FROM node:carbon-alpine
 RUN apk update && apk upgrade && apk add --no-cache git openssh openssh-server yarn curl ssmtp;
 
-# Copy to tmp location. after up the volume is mounted and we can copy to final destination
-COPY ./server_default.json /usr/server_default.json
-
 # Copy helper scripts
 COPY ./wait-for-ok.sh /usr/local/bin/wait-for-ok.sh
 RUN chmod +x /usr/local/bin/wait-for-ok.sh
@@ -24,8 +21,9 @@ RUN echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config
 RUN echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 
 #use previous generated keys, so the host system wont think the ssh server changed on every rebuild
-COPY ./sshServer/* /etc/ssh/
-RUN chmod 600   /etc/ssh/*
+# NO these should be differeetn for each serfver
+#COPY ./sshServer/* /etc/ssh/
+#RUN chmod 600   /etc/ssh/*
 
 
 RUN adduser -D  nodedebug

@@ -5,8 +5,8 @@
 # depends on curl
 #
 #   parameter $1 url to call e.g. "http://www.google.com"
-#   parameter $2 number of retries
-#
+#   parameter $2 number of retries optional defaults to 50
+#   parameter $3 the command to execute on success
 #   improvement : url als last param, handle rest as options
 #
 #################################################################
@@ -18,14 +18,16 @@ then
 fi
 
 maxCount=50
-if [ "$2" -gt 0 ] 
+if [ "$2" -gt 0 ] # gives out of range when no count is supplied
 then
    maxCount=$2
 fi
 
 let count=0;
 
-while true
+doLoop=true
+
+while "$doLoop" = true
 do
     httpResult="$(curl -s -o /dev/null -w ''%{http_code}''  $1)";
     let "count++";
@@ -33,7 +35,7 @@ do
     if [ "$httpResult" == "200" ]
     then
         echo "calling for '$1' attempt '$count' of '$maxCount' succeeded";
-        exit 0
+        doLoop=false
     else
         echo "calling for '$1' attempt '$count' of '$maxCount' faild with code '$httpResult'";
         if [ "$count" -ge $maxCount ]
@@ -44,3 +46,12 @@ do
         sleep 2;
     fi;
 done;
+
+if [ -n "$3" ] 
+then
+    echo "run command "
+    eval $3
+else 
+    echo "command not set"
+fi
+

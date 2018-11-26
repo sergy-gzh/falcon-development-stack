@@ -66,7 +66,6 @@
         "api": "api-magento2"
       }
     }
-    }
   ],
   "session": {
     "keys": ["secret key"],

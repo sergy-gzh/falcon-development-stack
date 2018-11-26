@@ -27,6 +27,11 @@ docker-compose exec -u www-data deity_magento2 /bin/bash /usr/local/bin/post-bui
 
 color_magenta
 echo "Updating deity server config"
+color_reset
+docker-compose run  deity_server /bin/sh -c "cp /usr/server_default.json /usr/src/my-app/server/config/development.json"
+
+
+color_magenta
+echo "Updating deity client config"
 color_reset 
-docker-compose up -d deity_project
-docker-compose exec deity_project /bin/sh -c "mv /usr/server_default.json /usr/src/my-app/server/config/development.json"
+docker-compose run deity_client  /bin/sh -c "cp /usr/client_default.json /usr/src/my-app/client/config/development.json"
