@@ -40,7 +40,12 @@ $ ./bin/build.sh
 
 5) After the build, bring up the containers using 
 ```bash
-$ ./bin/up.sh
+$ docker-compose up
+```
+
+6) add the next line to your `hosts` file 
+```
+127.0.0.1    deityserver
 ```
 ## Contents of the development stack
 
@@ -186,15 +191,12 @@ $ docker volume rm  [stack_name]_wordpress_db_data
 ```
 
 # Technical debt 
-* split deity-falcon client and server to different host (currently the client doesn't support this, update is pending)
 * server configuration default.json is a full copy. overwriting specific values isn't supported yet
 * debugging Node.js server not working on falcon- client (ticket created)
 * node.js server debugging, cant set port trugh settings. Wont be a problem when running on seperate containers
 * Magento 2 use redis for session server
 * Wordpress use redis for session server
 * Mac and Windows users will have a bad time with mounted volumes
-* Mac's currently dont suppoort mounting the authentication agent socket. (update is planed)
-* Windows will probably never support mounting the authentication agent socket
 * add status/info pages for redis
 * add nginx (single entry point) to proxy all date to correct servers 
 * check out HAproxy over nginx
