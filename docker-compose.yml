@@ -36,8 +36,7 @@ services:
     depends_on:
       - deity_server
     links:
-     - deity_server:deityserver
-    tty: true
+     - deity_server:falcon.develop
     working_dir: /usr/src/my-app/client
   deity_server:
     build: docker/deity-server
@@ -54,11 +53,9 @@ services:
     links: #added allias because underscore not allowed in url
      - deity_magento2:magento2
      - deity_wordpress:wordpress
-    tty: true
     working_dir: /usr/src/my-app/server
   deity_magento2:
     build: docker/magento2
-    tty: true
     ports:
       - "8062:80"
     depends_on:
@@ -103,6 +100,15 @@ services:
       - "1025:1025" # mail port
       - "8025:8025" # web interface
     restart: always
+  deity_proxy:
+    build: docker/proxy
+    ports:
+        - "8666:80"
+    links:
+     - deity_magento2:magento2
+     - deity_wordpress:wordpress
+     - deity_server:server
+     - deity_client:client
 volumes:
   wordpress_db_data:
   magento_db_data:

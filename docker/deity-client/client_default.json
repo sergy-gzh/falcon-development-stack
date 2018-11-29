@@ -6,7 +6,7 @@
   },
   "apolloClient": {
     "httpLink": {
-      "uri": "http://deityserver:4000/graphql"
+      "uri": "http://falcon.develop:4000/graphql"
     },
     "config": {}
   },
