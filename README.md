@@ -43,17 +43,15 @@ $ ./bin/build.sh
 $ docker-compose up
 ```
 
-6) add the next line to your `hosts` file 
-```
-127.0.0.1    deityserver
-```
+6) Set your browser to use the pack file `docker/proxy/deity.pack`
+
 ## Contents of the development stack
 
 ### Deity Falcon Client
 Deity Falcon client . provide SPA with server side rendering
 
 #### Webpage
-* [http:://localhost:3000](http:://localhost:3000)
+* [http:://falcon.develop](http:://falcon/develop)
 
 #### Containers
 * deity_project 
@@ -198,9 +196,7 @@ $ docker volume rm  [stack_name]_wordpress_db_data
 * Wordpress use redis for session server
 * Mac and Windows users will have a bad time with mounted volumes
 * add status/info pages for redis
-* add nginx (single entry point) to proxy all date to correct servers 
 * check out HAproxy over nginx
-* provide environment file for external port mappings
 * provide option to switch between main/nightly builds / magento developement environment
 * Add Mailhog as default Server for Sendmail (All mails not send from Wordpress or Magento)
 

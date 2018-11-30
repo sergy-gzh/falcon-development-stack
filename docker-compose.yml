@@ -104,11 +104,13 @@ services:
     build: docker/proxy
     ports:
         - "8666:80"
+        - "8667:443"
     links:
      - deity_magento2:magento2
      - deity_wordpress:wordpress
      - deity_server:server
      - deity_client:client
+     - deity_mailhog:mail
 volumes:
   wordpress_db_data:
   magento_db_data:
