@@ -4,5 +4,5 @@
 --timezone="${MAGENTO_TIMEZONE}" --currency="${MAGENTO_DEFAULT_CURRENCY}" --db-host="${MYSQL_HOST}" --db-name="${MYSQL_DATABASE}" --db-user="${MYSQL_USER}" \
 --db-password="${MYSQL_PASSWORD}" --use-secure="${MAGENTO_USE_SECURE}" --base-url-secure="${MAGENTO_BASE_URL_SECURE}" --use-secure-admin="${MAGENTO_USE_SECURE_ADMIN}" \
 --admin-firstname="${MAGENTO_ADMIN_FIRSTNAME}" --admin-lastname="${MAGENTO_ADMIN_LASTNAME}" --admin-email="${MAGENTO_ADMIN_EMAIL}" --admin-user="${MAGENTO_ADMIN_USERNAME}" \
---admin-password="${MAGENTO_ADMIN_PASSWORD}" --cache-backend="redis" --cache-backend-redis-server="deity_redis" --cache-backend-redis-port=6379 --cache-backend-redis-db="0" \
---session-save="redis"  --session-save-redis-host="deity_redis" --session-save-redis-port=6379 --session-save-redis-db="2" --session-save-redis-max-concurrency=60 --use-rewrites=1
+--admin-password="${MAGENTO_ADMIN_PASSWORD}" --cache-backend="redis" --cache-backend-redis-server="${REDIS_HOST}" --cache-backend-redis-port=6379 --cache-backend-redis-db="0" \
+--session-save="redis"  --session-save-redis-host="${REDIS_HOST}" --session-save-redis-port=6379 --session-save-redis-db="2" --session-save-redis-max-concurrency=60 --use-rewrites=1
