@@ -161,17 +161,10 @@ Mail catcher. Catches all mails send in the Stack and provides a user interface 
 
 ### Purge build 
 Removes all build info from the host system. but leaves the docker images intact
-the 2 database voluems created arn't removed by this command. do this manlually if you need to whipe that data.
+the 2 database volumes created arn't removed by this command. do this manlually if you need to whipe that data.
 ```bash
 $ bin/purge.sh
 ```
-
-### Shortcut for starting Deity
-Shortcut to start stack and the Node data server `deity_project`.
-```bash
-$ bin/up.sh
-```
-
 
 # Multi-project environment
 
