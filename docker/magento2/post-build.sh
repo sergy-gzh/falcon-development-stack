@@ -10,7 +10,7 @@ if [ "$MAGENTO_DEV" == "Y" ]; then
 else
     if [ ! -f "/var/www/html/composer.json" ]; then
         echo 'Magento from official magento repo'
-        composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition /var/www/html/
+        composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition="${MAGENTO_VERSION_BRANCH_NAME}" /var/www/html/
     else
         echo 'Magento code exists'
     fi
@@ -36,15 +36,17 @@ bin/magento  admin:user:create  --admin-user="${MAGENTO_NODEUSER_USERNAME}" --ad
 if [ "$MAGENTO_DEV" == "Y" ]; then
     echo "Develpoment mode. not installing modules (should already be in the installation)".
 else
-    composer config repositories.deity-api '{"type": "path", "url": "../packages/api"}'
-    composer require deity/falcon-magento:dev-master
+    composer require deity/falcon-magento dev-master
 fi
 
-/var/www/html/bin/magento sampledata:deploy 
-/var/www/html/bin/magento setup:upgrade
-
-sudo mv /var/www/html/app/etc/env.php /var/www/html/app/etc/env.bck
-sudo sed 's/];/,/' /var/www/html/app/etc/env.bck  > /var/www/html/app/etc/env.php 
-sudo cat /var/www/redis_config.txt >>  /var/www/html/app/etc/env.php 
+if [ "$MAGENTO_DEV" != "Y" ]; then
+    # Its impossible to run sample data and magento API tests altogether.
+    /var/www/html/bin/magento sampledata:deploy
+    /var/www/html/bin/magento setup:upgrade
+fi
 
 sudo chown www-data:www-data -R /var/www/html
+
+if [ "$MAGENTO_DEV" != "Y" ]; then
+    bin/magento deploy:mode:set production
+fi

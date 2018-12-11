@@ -63,6 +63,7 @@ services:
       - "8062:80"
     depends_on:
       - deity_magento2_mysql
+      - deity_redis
     env_file:
       - ./docker/magento2/env
     volumes:      
