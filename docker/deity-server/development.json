@@ -1,0 +1,27 @@
+{
+  "endpoints": {
+    "magento": {
+      "config": {
+        "host": "magento2",
+        "protocol": "http"
+      }
+    }
+  },
+  "apis": {
+    "api-wordpress": {
+      "config": {
+        "host": "wordpress",
+        "protocol": "http",
+        "apiPrefix": "/wp-json/wp/v2"
+      }
+    },
+    "api-magento2": {
+      "config": {
+        "host": "magento2",
+        "protocol": "http",
+        "username": "node-api",
+        "password": "3de3f3a262"
+      }
+    }
+  }
+}

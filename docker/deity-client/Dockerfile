@@ -1,6 +1,6 @@
 FROM falcon
 
-COPY ./client_default.json /usr/client_default.json
+COPY ./development.json /usr/client_development.json
 
 # use previous generated keys, so the host system wont think the ssh server changed on every rebuild
 COPY ./sshServer/* /etc/ssh/

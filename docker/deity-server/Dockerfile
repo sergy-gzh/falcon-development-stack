@@ -1,7 +1,7 @@
 FROM falcon
 
 # Copy to tmp location. after up the volume is mounted and we can copy to final destination
-COPY ./server_default.json /usr/server_default.json
+COPY ./development.json /usr/server_development.json
 
 # use previous generated keys, so the host system wont think the ssh server changed on every rebuild
 COPY ./sshServer/* /etc/ssh/

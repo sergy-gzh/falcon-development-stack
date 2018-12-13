@@ -17,7 +17,7 @@ docker-compose build
 
 color_green
 echo "Build is done"
-echo "bringing down environment. To start it up again type bin/up.sh "
+echo "bringing down environment. To start it up again type 'docker-compose up'"
 color_reset
 
 docker-compose down
