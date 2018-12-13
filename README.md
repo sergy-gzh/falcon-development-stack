@@ -174,7 +174,7 @@ Docker-Compose will add a prefix to container names automatically (taken from yo
 this way - you can clone this project to any folder and start the project without having any conflicts
 with container names.
 
-# Presistent data
+# Persistent data
 The code and the databases are sored on "named volumes"
 In a linux setup the code folders  will be maped to `./src`
 The database folders are just named volumes. They wil reactach when needed. Please note before a rebuild, you might want to drop these named folders from your docker instance
