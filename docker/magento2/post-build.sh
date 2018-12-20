@@ -8,7 +8,7 @@ if [ "$MAGENTO_DEV" == "Y" ]; then
     echo 'Magento from deity'
     composer install
 else
-    if [ ! -f "${MAGENTO_DIR}/composer.json" ]; then
+    if [ ! -e "${MAGENTO_DIR}/composer.json" ]; then
         echo 'Magento from official magento repo'
         composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition="${MAGENTO_VERSION_BRANCH_NAME}" ${MAGENTO_DIR}/
     else
