@@ -34,7 +34,9 @@ git clone git@github.com:deity-io/falcon-wordpress-module.git "${DEITY_STACK_ROO
 
 
 if [ "$MAGENTO_DEV" == "Y" ]; then
-    git clone git@github.com:deity-io/falcon-magento2-development.git "${DEITY_STACK_ROOT}/src/magento2/"
+    if [ ! -d "${DEITY_STACK_ROOT}/src/magento2/" ]; then
+        git clone git@github.com:deity-io/falcon-magento2-development.git "${DEITY_STACK_ROOT}/src/magento2/"
+    fi
 else
     git clone git@github.com:deity-io/falcon-magento2-module.git "${DEITY_STACK_ROOT}/src/deity-magento-api/"
 fi
