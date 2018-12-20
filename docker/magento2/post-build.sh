@@ -26,6 +26,7 @@ fi
 sudo find ${MAGENTO_DIR}/ -type d -exec chmod 777 {} \; ## check this other-user rights, i'm setting this for the developer on the mounts
 sudo find ${MAGENTO_DIR}/ -type f -exec chmod 666 {} \; ## check this other-user rights, i'm setting this for the developer on the mounts
 sudo chmod ugo+x ${MAGENTO_DIR}/bin/magento
+sudo chmod ugo+x ${MAGENTO_DIR}/vendor/bin/*
 
 /usr/local/bin/install-magento
 
