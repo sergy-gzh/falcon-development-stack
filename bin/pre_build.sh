@@ -45,7 +45,7 @@ fi
 if [ ! -d "${DEITY_STACK_ROOT}/src/deity-project" ]; then
     docker build -t falcon "${DEITY_STACK_ROOT}/docker/deity-project/"
     # rm -rf /home/bram/projects/falcon/src
-    docker run -t --rm -v "${DEITY_STACK_ROOT}/src/deity-project":/usr/src falcon:latest /bin/sh -c "cd /usr/src && npx create falcon-app my-app"
+    docker run -t --rm -v "${DEITY_STACK_ROOT}/src/deity-project":/usr/src falcon:latest /bin/sh -c "cd /usr/src && npx create-falcon-app my-app"
 
     color_green
     echo "Done building app"
