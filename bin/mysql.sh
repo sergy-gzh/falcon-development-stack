@@ -3,8 +3,8 @@ set -e
 source ./docker/magento2/env
 
 if [ -t 0 ] ; then
-    tty="-it"
+    TTY="-it"
 else
-    tty="-i"
+    TTY="-i"
 fi
-docker exec $tty $(docker container ls -q --filter name=deity_magento2_mysql) mysql -hlocalhost -uroot -p${MYSQL_ROOT_PASSWORD} "${MYSQL_DATABASE}" $@
+docker exec $TTY $(docker container ls -q --filter name=deity_magento2_mysql) mysql -hlocalhost -uroot -p${MYSQL_ROOT_PASSWORD} "${MYSQL_DATABASE}" $@
