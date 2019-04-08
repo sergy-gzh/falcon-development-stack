@@ -23,7 +23,9 @@ color_reset
 # change ownership of the ssh agent socket so www-data can use it
 docker-compose up -d deity_magento2
 #docker-compose exec deity_magento2 /bin/sh -c 'chown www-data:www-data /tmp/agent.sock'
-docker-compose exec -u www-data deity_magento2 /bin/bash /usr/local/bin/post-build.sh
+
+docker-compose exec deity_magento2 /bin/bash -c "chown -R www-data:www-data ${MAGENTO_DIR}"
+docker exec -it -u www-data $(docker container ls -q --filter name=deity_magento2_1) /bin/bash /usr/local/bin/post-build.sh
 
 color_magenta
 echo "Updating deity server config"

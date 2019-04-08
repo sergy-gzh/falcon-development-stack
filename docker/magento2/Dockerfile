@@ -3,19 +3,6 @@ FROM alexcheng/apache2-php7:latest
 ENV INSTALL_DIR /var/www/html
 ENV COMPOSER_HOME /var/www/.composer/
 
-COPY ./composer/auth.json $COMPOSER_HOME
-RUN curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer \
-    && mkdir /var/www/.ssh \
-    && touch /var/www/.ssh/config \
-    && echo "StrictHostKeyChecking no " >> /var/www/.ssh/config \
-    && echo "StrictHostKeyChecking no " >> /root/.ssh/config \
-    && chown www-data:www-data $COMPOSER_HOME/auth.json
-   
-#   && chown www-data:www-data /var/www/.ssh/* \
-#   && chmod 400 /var/www/.ssh/id_rsa \
-
-
 RUN requirements="libpng12-dev libmcrypt-dev libmcrypt4 libcurl3-dev libfreetype6 libjpeg-turbo8 libjpeg-turbo8-dev libpng12-dev libfreetype6-dev libicu-dev libxslt1-dev git" \
     && apt-get update \
     && apt-get install -y $requirements \
@@ -37,6 +24,16 @@ RUN requirements="libpng12-dev libmcrypt-dev libmcrypt4 libcurl3-dev libfreetype
     && docker-php-ext-install bcmath \
     && requirementsToRemove="libpng12-dev libmcrypt-dev libcurl3-dev libpng12-dev libfreetype6-dev libjpeg-turbo8-dev" \
     && apt-get purge --auto-remove -y $requirementsToRemove
+
+RUN curl -sS https://getcomposer.org/installer | php \
+        && mv composer.phar /usr/local/bin/composer && \
+        composer global require hirak/prestissimo --no-plugins --no-scripts
+
+
+RUN mkdir /var/www/.ssh \
+    && touch /var/www/.ssh/config \
+    && echo "StrictHostKeyChecking no " >> /var/www/.ssh/config \
+    && echo "StrictHostKeyChecking no " >> /root/.ssh/config
 
 # PECL install but not enable xdebug
 # Symlink xdebug.so so that it is at a known path
