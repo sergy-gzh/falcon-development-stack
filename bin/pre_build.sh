@@ -2,7 +2,7 @@
 
 ##################################################################################
 ##
-##   PRE-Build checks and configures the host system before runiing the build command.
+##   PRE-Build checks and configures the host system before running the build command.
 ##
 ##################################################################################
 
