@@ -29,13 +29,11 @@ RUN curl -sS https://getcomposer.org/installer | php \
         && mv composer.phar /usr/local/bin/composer && \
         composer global require hirak/prestissimo --no-plugins --no-scripts
 
-COPY ./composer/auth.json $COMPOSER_HOME
 
 RUN mkdir /var/www/.ssh \
     && touch /var/www/.ssh/config \
     && echo "StrictHostKeyChecking no " >> /var/www/.ssh/config \
-    && echo "StrictHostKeyChecking no " >> /root/.ssh/config \
-    && chown www-data:www-data $COMPOSER_HOME/auth.json
+    && echo "StrictHostKeyChecking no " >> /root/.ssh/config
 
 # PECL install but not enable xdebug
 # Symlink xdebug.so so that it is at a known path
