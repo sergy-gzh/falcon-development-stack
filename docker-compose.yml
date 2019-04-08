@@ -103,7 +103,6 @@ services:
     ports:
       - "1025:1025" # mail port
       - "8025:8025" # web interface
-    restart: always
 volumes:
   wordpress_db_data:
   magento_db_data:
