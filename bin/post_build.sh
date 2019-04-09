@@ -10,6 +10,8 @@
 # init the environment 
 .  `dirname "${THIS}"`"/bin/functions.sh"
 
+source ./docker/magento2/env
+
 color_magenta
 echo "Installing wordpress"
 color_reset 
