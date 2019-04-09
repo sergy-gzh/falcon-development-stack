@@ -26,8 +26,7 @@ RUN requirements="libpng12-dev libmcrypt-dev libmcrypt4 libcurl3-dev libfreetype
     && apt-get purge --auto-remove -y $requirementsToRemove
 
 RUN curl -sS https://getcomposer.org/installer | php \
-        && mv composer.phar /usr/local/bin/composer && \
-        composer global require hirak/prestissimo --no-plugins --no-scripts
+        && mv composer.phar /usr/local/bin/composer
 
 
 RUN mkdir /var/www/.ssh \

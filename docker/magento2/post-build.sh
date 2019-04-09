@@ -4,11 +4,18 @@ set -e
 
 if [ "$MAGENTO_DEV" == "Y" ]; then
     echo 'Magento from deity'
+    composer global require hirak/prestissimo
     composer install
 else
     if [ ! -e "${MAGENTO_DIR}/composer.json" ]; then
-        echo 'Magento from official magento repo'
-        composer create-project --repository-url=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition="${MAGENTO_VERSION_BRANCH_NAME}" --no-install ${MAGENTO_DIR}/
+        echo 'Installing Magento from repo'
+        composer create-project --repository=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition="${MAGENTO_VERSION_BRANCH_NAME}" ${MAGENTO_DIR} --no-install
+        cd ${MAGENTO_DIR}
+        composer config --unset repo.0
+        composer config repo.foomanmirror composer https://repo-magento-mirror.fooman.co.nz/
+        echo 'Preparing to install done'
+        composer install
+        cd ../
     else
         echo 'Magento code exists'
     fi
