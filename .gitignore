@@ -2,4 +2,5 @@
 /src/*
 **/id_rsa
 docker/magento2/composer/auth.json
+docker/magento2/env
 auth.json

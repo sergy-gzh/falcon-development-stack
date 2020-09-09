@@ -1,66 +1,81 @@
-FROM alexcheng/apache2-php7:latest
+FROM php:7.4-fpm-buster
+MAINTAINER Sergii Gozhedrianov <sergii@deity.io>
 
-ENV INSTALL_DIR /var/www/html
 ENV COMPOSER_HOME /var/www/.composer/
 
-RUN requirements="libpng12-dev libmcrypt-dev libmcrypt4 libcurl3-dev libfreetype6 libjpeg-turbo8 libjpeg-turbo8-dev libpng12-dev libfreetype6-dev libicu-dev libxslt1-dev git" \
-    && apt-get update \
-    && apt-get install -y $requirements \
-    && apt-get install -y sudo \
-    && apt-get install -y mysql-client \
-    && apt-get install -y unzip \
-    && apt-get install -y ssmtp \
-    && apt-get install -y mailutils \
-    && rm -rf /var/lib/apt/lists/* \
-    && docker-php-ext-install pdo_mysql \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install gd \
-    && docker-php-ext-install mcrypt \
-    && docker-php-ext-install mbstring \
-    && docker-php-ext-install zip \
-    && docker-php-ext-install intl \
-    && docker-php-ext-install xsl \
-    && docker-php-ext-install soap \
-    && docker-php-ext-install bcmath \
-    && requirementsToRemove="libpng12-dev libmcrypt-dev libcurl3-dev libpng12-dev libfreetype6-dev libjpeg-turbo8-dev" \
-    && apt-get purge --auto-remove -y $requirementsToRemove
+RUN apt-get update && apt-get install -y \
+  cron \
+  git \
+  gzip \
+  libbz2-dev \
+  libfreetype6-dev \
+  libicu-dev \
+  libjpeg62-turbo-dev \
+  libmcrypt-dev \
+  libonig-dev \
+  libpng-dev \
+  libsodium-dev \
+  libssh2-1-dev \
+  libxslt1-dev \
+  libzip-dev \
+  lsof \
+  default-mysql-client \
+  vim \
+  zip \
+  procps
 
-RUN curl -sS https://getcomposer.org/installer | php \
-        && mv composer.phar /usr/local/bin/composer
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
-
-RUN mkdir /var/www/.ssh \
-    && touch /var/www/.ssh/config \
-    && echo "StrictHostKeyChecking no " >> /var/www/.ssh/config \
-    && echo "StrictHostKeyChecking no " >> /root/.ssh/config
+RUN docker-php-ext-install \
+  bcmath \
+  bz2 \
+  calendar \
+  exif \
+  gd \
+  gettext \
+  intl \
+  mbstring \
+  mysqli \
+  opcache \
+  pcntl \
+  pdo_mysql \
+  soap \
+  sockets \
+  sodium \
+  sysvmsg \
+  sysvsem \
+  sysvshm \
+  xsl \
+  zip
 
 # PECL install but not enable xdebug
 # Symlink xdebug.so so that it is at a known path
-RUN pecl install xdebug \
-    && PHP_EXT_PATH=$(php -r 'echo ini_get("extension_dir");') \
-    && ln -s "${PHP_EXT_PATH}/xdebug.so" /opt/xdebug.so \
-    && chsh -s /bin/bash www-data \
-    && chown -R www-data:www-data /var/www
+RUN pecl channel-update pecl.php.net \
+  && pecl install xdebug \
+  && PHP_EXT_PATH=$(php -r 'echo ini_get("extension_dir");') \
+  && ln -s "${PHP_EXT_PATH}/xdebug.so" /opt/xdebug.so \
+  && chsh -s /bin/bash www-data \
+  && chown -R www-data:www-data /var/www
 
-COPY ./config/xdebug.ini /usr/local/etc/php/conf.d/
-COPY ./install-magento /usr/local/bin/install-magento
-COPY ./post-build.sh /usr/local/bin/post-build.sh
+RUN groupadd -g 1000 app \
+    && useradd -g 1000 -u 1000 -d /var/www -s /bin/bash app
 
-RUN chmod +x /usr/local/bin/post-build.sh \
-&& chmod +x /usr/local/bin/install-magento \
-&&  a2enmod rewrite \
-&&  echo "memory_limit=2048M" > /usr/local/etc/php/conf.d/memory-limit.ini \
-&&  echo "www-data ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
-&&  echo "hostname=localhost.localdomain" >> /etc/ssmtp/ssmtp.conf \
-&&  echo "root=root@deity.io" >> /etc/ssmtp/ssmtp.conf \
-&&  echo "mailhub=deity_mailhog:1025" >> /etc/ssmtp/ssmtp.conf \
-&&  echo "sendmail_path=/usr/sbin/ssmtp -t" >> /usr/local/etc/php/conf.d/php-sendmail.ini \
-&&  echo "localhost localhost.localdomain" >> /etc/hosts \
-&&  apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN curl -sSLO https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 \
+  && chmod +x mhsendmail_linux_amd64 \
+  && mv mhsendmail_linux_amd64 /usr/local/bin/mhsendmail
 
-WORKDIR $INSTALL_DIR
+RUN curl -sS https://getcomposer.org/installer | \
+  php -- --version=1.10.10 --install-dir=/usr/local/bin --filename=composer
 
-# Add cron job
-ADD crontab /etc/cron.d/magento2-cron
-RUN chmod 0644 /etc/cron.d/magento2-cron \
-    && crontab -u www-data /etc/cron.d/magento2-cron
+COPY config/www.conf /usr/local/etc/php-fpm.d/
+COPY config/php.ini /usr/local/etc/php/
+COPY config/php-fpm.conf /usr/local/etc/
+
+RUN mkdir -p /etc/nginx/html /var/www/html /sock \
+  && chown -R app:app /etc/nginx /var/www /usr/local/etc/php/conf.d /sock
+
+USER app:app
+
+VOLUME /var/www
+
+WORKDIR /var/www/html

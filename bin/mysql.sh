@@ -7,4 +7,4 @@ if [ -t 0 ] ; then
 else
     TTY="-i"
 fi
-docker exec $TTY $(docker container ls -q --filter name=deity_magento2_mysql) mysql -hlocalhost -uroot -p${MYSQL_ROOT_PASSWORD} "${MYSQL_DATABASE}" $@
+docker exec $TTY $(docker container ls -q --filter name=magento2_db) mysql -hlocalhost -uroot -p${MYSQL_ROOT_PASSWORD} "${MYSQL_DATABASE}" $@

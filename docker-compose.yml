@@ -1,103 +1,114 @@
-version: '3.2'
+version: '3.7'
 services:
-  deity_wordpress_mysql:
-    image: mariadb:10.2
+#  deity_wordpress_mysql:
+#    image: mariadb:10.2
+#    volumes:
+#      - type: volume
+#        source: wordpress_db_data
+#        target: /var/lib/mysql
+#        volume:
+#          nocopy: true
+#    env_file:
+#      - ./docker/wordpress/env
+#    ports:
+#       - "3354:3306"
+#  deity_client:
+#    build: docker/deity-client
+#    ports:
+#      - "3000:3000" #client
+#      - "3001:3001" # client in debug mode. for HMR
+#    volumes:
+#      - type: bind
+#        source: ./src/deity-project/
+#        target: /usr/src/
+#    depends_on:
+#      - deity_server
+#    links:
+#     - deity_server:deityserver
+#    tty: true
+#    working_dir: /usr/src/my-app/client
+#  deity_server:
+#    build: docker/deity-server
+#    ports:
+#      - "4000:4000" #server
+#      - "2222:22" #ssh
+#    volumes:
+#      - type: bind
+#        source: ./src/deity-project/
+#        target: /usr/src/
+#    depends_on:
+#      - magento2_phpfpm
+#      - deity_wordpress
+#    links: #added alias because underscore not allowed in url
+#     - deity_magento2:magento2
+#     - deity_wordpress:wordpress
+#    tty: true
+#    working_dir: /usr/src/my-app/server
+  deity_elasticsearch:
+    build: docker/elasticsearch
+    environment:
+      - "discovery.type=single-node"
     volumes:
-      - type: volume
-        source: wordpress_db_data
-        target: /var/lib/mysql
-        volume:
-          nocopy: true
-    env_file:
-      - ./docker/wordpress/env
+      - /sys/fs/cgroup:/sys/fs/cgroup
+    cap_add:
+      - SYS_ADMIN
     ports:
-       - "3354:3306"
-  deity_magento2_mysql:
+      - "9200:9200"
+      - "9300:9300"
+  magento2_db:
     image: mariadb:10.2
     volumes:
       - type: volume
         source: magento_db_data
         target: /var/lib/mysql
         volume:
-          nocopy: true    
+          nocopy: true
     env_file:
       - ./docker/magento2/env
     ports:
       - "3352:3306"
-  deity_client:
-    build: docker/deity-client
+  magento2_nginx:
+    build: docker/magento2_nginx
     ports:
-      - "3000:3000" #client
-      - "3001:3001" # client in debug mode. for HMR
-    volumes:
-      - type: bind
-        source: ./src/deity-project/
-        target: /usr/src/  
-    depends_on:
-      - deity_server
-    links:
-     - deity_server:deityserver
-    tty: true
-    working_dir: /usr/src/my-app/client
-  deity_server:
-    build: docker/deity-server
-    ports:
-      - "4000:4000" #server
-      - "2222:22" #ssh
-    volumes:
-      - type: bind
-        source: ./src/deity-project/
-        target: /usr/src/  
-    depends_on:
-      - deity_magento2
-      - deity_wordpress
-    links: #added allias because underscore not allowed in url
-     - deity_magento2:magento2
-     - deity_wordpress:wordpress
-    tty: true
-    working_dir: /usr/src/my-app/server
-  deity_magento2:
+      - "8062:8062"
+      - "443:8443"
+    volumes: &appvolumes
+      - /var/www/.composer:/var/www/.composer:cached
+      - ./src/magento2:/var/www/html
+      - sockdata:/sock
+      - ssldata:/etc/nginx/certs
+  magento2_phpfpm:
     build: docker/magento2
     tty: true
-    ports:
-      - "8062:80"
     depends_on:
-      - deity_magento2_mysql
-      - deity_redis
+      - magento2_redis
+      - magento2_db
     env_file:
       - ./docker/magento2/env
-    volumes:      
-      - type: bind
-        source: ./src/magento2
-        target: /var/www/html/
-      - type: bind
-        source: ./src/deity-magento-api
-        target: /var/www/packages/api
-    links:
-      - deity_redis:deity_redis
+    volumes: *appvolumes
     #entrypoint:  entrypoint.sh
-  deity_redis:
-    image: redis:3.2-alpine
+  magento2_redis:
+    image: redis:5.0
     command: "--maxmemory 64m"
     ports:
       - "6379:6379"
     entrypoint: "redis-server"
-  deity_wordpress:
-    build: docker/wordpress
-    ports:
-        - "8063:80"
-    depends_on:
-      - deity_wordpress_mysql
-    env_file:
-      - ./docker/wordpress/env
-    volumes:
-      - type: bind
-        source: ./src/deity-wordpress-api/
-        target: /var/www/html/wp-content/plugins/deity-wordpress-api
-      - type: bind
-        source: ./src/deity-products-wordpress
-        target: /var/www/html/wp-content/plugins/deity-products-wordpress
-    #entrypoint: entrypoint.sh 
+#  deity_wordpress:
+#    build: docker/wordpress
+#    ports:
+#        - "8063:80"
+#    depends_on:
+#      - deity_wordpress_mysql
+#    env_file:
+#      - ./docker/wordpress/env
+#    volumes:
+#      - type: bind
+#        source: ./src/deity-wordpress-api/
+#        target: /var/www/html/wp-content/plugins/deity-wordpress-api
+#      - type: bind
+#        source: ./src/deity-products-wordpress
+#        target: /var/www/html/wp-content/plugins/deity-products-wordpress
+#    #entrypoint: entrypoint.sh
   deity_mailhog:
     image: mailhog/mailhog
     ports:
@@ -106,3 +117,5 @@ services:
 volumes:
   wordpress_db_data:
   magento_db_data:
+  sockdata:
+  ssldata:
