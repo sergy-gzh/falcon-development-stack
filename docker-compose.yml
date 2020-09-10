@@ -49,9 +49,7 @@ services:
     environment:
       - "discovery.type=single-node"
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup
-    cap_add:
-      - SYS_ADMIN
+      - elastic-data:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -115,6 +113,8 @@ services:
       - "1025:1025" # mail port
       - "8025:8025" # web interface
 volumes:
+  elastic-data:
+    driver: local
   wordpress_db_data:
   magento_db_data:
   sockdata:
